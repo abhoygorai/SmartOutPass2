@@ -1,0 +1,92 @@
+body {
+    background-color: rgb(164, 2, 2);
+    /* background-image: url("image.jpg");
+    background-size: cover; */
+    font-family: "Roboto", sans-serif;
+}
+
+h2{
+    opacity: 87%;
+}
+
+.logo {
+    width: 250px;
+    margin-top: 20px;
+    margin-left: 30px;
+}
+
+.main {
+    min-height: 500px;
+    margin-top: 30px;
+    background-color: rgb(255, 255, 255);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.titleText {
+    opacity: 90%;
+    text-align: center;
+    margin-top: 40px;
+    font-size: 2.6rem;
+}
+
+.btn {
+    font-size: 1.8rem;
+    background-color: rgb(164, 2, 2);
+    margin: 30px;
+}
+
+.form-1 {
+    margin-top: 2%;
+    text-align: left;
+    width: 500px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.form-2 {
+    margin-top: 2%;
+    width: 1000px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+}
+
+.table-1 {
+    border-collapse: separate;
+    border-spacing: 50px 0;
+}
+
+#auth-submit-button {
+    text-align: center;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.buttonClass{
+    display: flex;
+    justify-content: center;
+}
+
+@keyframes fadeInAnimation {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+     }
+}
+
+.alert{
+    margin: 15px;
+    z-index: 10;
+    width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+    animation: fadeInAnimation ease .8s
+}

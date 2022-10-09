@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CSS only -->
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <title>Document</title>
+</head>
+
+<body>
+    <div>
+        <img class="logo" src="images/logo.png" alt="logo">
+    </div>
+    <div class="container-fluid main">
+        <div class="container-fluid contents">
+
+            <h1 class="titleText">Student Details</h1>
+            <form class="form-2" method="post" action="/hostelresult">
+                <table class="table table-borderless table-1">
+                    <tr>
+                        <td>
+                            <div class="mb-3">
+                                <label class="form-label">Name</label>
+                                <input required type="text" class="form-control" name="nameData" value="<%= studentName %>">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="mb-3">
+                                <label class="form-label">UID</label>
+                                <input required type="text" class="form-control" name="uidData" value=<%= uidData %>>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="mb-3">
+                                <label class="form-label">Mobile No</label>
+                                <input required type="text" class="form-control" name="mobileNo" value=<%= mobileNo %>>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="mb-3">
+                                <label class="form-label">Guiardian's No</label>
+                                <input required type="text" class="form-control" name="gurdianNo" value=<%= gurdianNo %>>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="mb-3">
+                                <label class="form-label">Hostel Name</label>
+                                <input required type="text" class="form-control" name="hostelName" value="NCT-1">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="mb-3">
+                                <label class="form-label">Room No</label>
+                                <input required type="text" class="form-control" name="roomNo" value="815">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="mb-3">
+                                <label class="form-label">Purpose</label>
+                                <input required type="text" class="form-control" name="purposeData">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="mb-3">
+                                <label class="form-label">Place</label>
+                                <input required type="text" class="form-control" name="placeData">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="mb-3">
+                                <label class="form-label">Out Time</label>
+                                <input required type="time" class="form-control" name="timeData">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="mb-3">
+                                <label class="form-label">Date</label>
+                                <input required type="date" class="form-control" name="dateData">
+                                <input hidden type="text" class="form-control" name="wardenData" value="wardenData">
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <button class="btn btn-danger" id="auth-submit-button" type="submit">Submit</button>
+            </form>
+
+        </div>
+    </div>
+
+</body>
+
+</html>
