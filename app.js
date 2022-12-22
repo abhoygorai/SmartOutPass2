@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt');
 const alert = require('alert');
 
 // connecting with the database
-mongoose.connect("mongodb://localhost:27017/outpassDB");
+mongoose.connect("mongodb://127.0.0.1:27017/outpassDB");
 
 // mongoose schema for hostel database 
 const hostelData = new mongoose.model("HostelData", {
@@ -33,8 +33,10 @@ const guardDataSchema = mongoose.Schema({
     },
     purpose: String,
     place: String,
-    time: String,
-    date: String,
+    outTime: String,
+    outDate: String,
+    inTime: String,
+    inDate: String,
     warden: String
 });
 
@@ -61,7 +63,8 @@ const guardAuthenticationData = new mongoose.model("guardAuthentication", {
     username: String,
     hashPassword: String
 });
-const finalPass = new mongoose.model("finalPass", guardDataSchema);
+const acceptedPass = new mongoose.model("acceptedPass", guardDataSchema);
+const rejectedPass = new mongoose.model("rejectedPass", guardDataSchema);
 
 const port = 3000;
 
@@ -106,14 +109,13 @@ app.post("/hostelauth", function (req, res) {
             bcrypt.compare(req.body.password, result.hashPassword, function (err, check) {
                 if (err) {
                     console.log(err);
-                    res.render("interface", { interfaceText: "Outpass Generation", interfaceSubText: "Enter UID", messageText: "Login error"});
+                    res.render("authpage", { authPageTitle: "Warden login", messageText: "Login Error", filledUsername: req.body.username });
                 }
                 else if (check) {
-                    res.render("interface", { interfaceText: "Outpass Generation", interfaceSubText: "Enter UID", messageText: ""});
+                    res.render("interface", { interfaceText: "Outpass Generation", interfaceSubText: "Enter UID", messageText: "" });
                 }
                 else {
                     res.render("authpage", { authPageTitle: "Warden login", messageText: "Wrong Password", filledUsername: req.body.username });
-
                 }
             });
         }
@@ -129,7 +131,7 @@ app.post("/hostel", function (req, res) {
             console.log(err);
         else {
             if (result == null) {
-                res.render("interface", { interfaceText: "Outpass Generation", interfaceSubText: "Enter UID", messageText: "No data found"});
+                res.render("interface", { interfaceText: "Outpass Generation", interfaceSubText: "Enter UID", messageText: "No data found" });
             }
             else {
                 foundData.name = result.name;
@@ -137,9 +139,10 @@ app.post("/hostel", function (req, res) {
                 foundData.mobileNo = result.mobileNo;
                 foundData.mobileNo = result.mobileNo;
                 foundData.gurdianNo = result.gurdianNo;
-                foundData.hostelDetails = result.hostelDetails;
+                foundData.hostelDetails.hostelName = result.hostelDetails.hostelName;
+                foundData.hostelDetails.roomNo = result.hostelDetails.roomNo;
             }
-            console.log(foundData.name);
+            // console.log(foundData);
             res.render("hostelResult", { studentName: foundData.name, uidData: foundData.uidData, mobileNo: foundData.mobileNo, gurdianNo: foundData.gurdianNo, hostelName: foundData.hostelDetails.hostelName, roomNo: foundData.hostelDetails.roomNo });
         }
     });
@@ -166,15 +169,18 @@ app.post("/hostelresult", function (req, res) {
                 },
                 purpose: req.body.purposeData,
                 place: req.body.placeData,
-                date: req.body.dateData,
-                time: req.body.timeData,
+                outTime: req.body.outTimeData,
+                outDate: req.body.outDateData,
+                inTime: req.body.inTimeData,
+                inDate: req.body.inDateData,
                 warden: req.body.wardenData
             });
             postDataForGuard.save();
-            res.render("interface", { interfaceText: "Outpass Generation", interfaceSubText: "Enter UID", messageText: "Outpass created"});
+            // console.log(postDataForGuard);
+            res.render("interface", { interfaceText: "Outpass Generation", interfaceSubText: "Enter UID", messageText: "Outpass created" });
         }
         else {
-            res.render("interface", { interfaceText: "Outpass Generation", interfaceSubText: "Enter UID", messageText: "Outpass already created"});
+            res.render("interface", { interfaceText: "Outpass Generation", interfaceSubText: "Enter UID", messageText: "Outpass already created" });
         }
     });
 });
@@ -202,7 +208,7 @@ app.post("/guardauth", function (req, res) {
                     res.render("authpage2", { authPageTitle: "Guard login", messageText: "Error occured", filledUsername: "" });
                 }
                 else if (check) {
-                    res.render("interface2", { interfaceText: "Outpass Verrification", interfaceSubText: "Enter UID", messageText: ""});
+                    res.render("interface2", { interfaceText: "Outpass Verrification", interfaceSubText: "Enter UID", messageText: "" });
                 }
                 else {
                     res.render("authpage2", { authPageTitle: "Guard login", messageText: "Wrong password", filledUsername: req.body.username });
@@ -218,55 +224,74 @@ app.post("/guard", function (req, res) {
     guardData.findOne({ uidData: uidDataForSearch.toUpperCase() }, function (err, result) {
         if (err) {
             console.log(err);
-            res.render("interface2", { interfaceText: "Outpass Verrification", interfaceSubText: "Enter UID", messageText: "Backend error"});
+            res.render("interface2", { interfaceText: "Outpass Verrification", interfaceSubText: "Enter UID", messageText: "Backend error" });
         }
         else if (result == null) {
-            res.render("interface2", { interfaceText: "Outpass Verrification", interfaceSubText: "Enter UID", messageText: "No data found"});
+            res.render("interface2", { interfaceText: "Outpass Verrification", interfaceSubText: "Enter UID", messageText: "No data found" });
         }
         else {
-            res.render("result2", { studentName: result.name, uidData: result.uidData, mobileNo: result.mobileNo, gurdianNo: result.gurdianNo, purposeData: result.purpose, placeData: result.place, dateData: result.date, timeData: result.time, hostelName: result.hostelDetails.hostelName+" ["+result.warden+"]", roomNo: result.hostelDetails.roomNo, wardenData: result.warden});
+            res.render("result2", { studentName: result.name, uidData: result.uidData, mobileNo: result.mobileNo, gurdianNo: result.gurdianNo, purposeData: result.purpose, placeData: result.place, outDateData: result.outDate, outTimeData: result.outTime, inTimeData: result.inTime, inDateData: result.inDate, hostelName: result.hostelDetails.hostelName + " [" + result.warden + "]", roomNo: result.hostelDetails.roomNo, wardenData: result.warden });
         }
     });
 })
 
 // post request in guardresult to approove or reject the pass
 app.post("/guardResult", function (req, res) {
-    finalPass.findOne({ uidData: req.body.uidData.toUpperCase() }, function (err, result){
-        if(err){
+    acceptedPass.findOne({ uidData: req.body.uidData.toUpperCase() }, function (err, result) {
+        if (err) {
             console.log(err);
-            res.render("interface2", { interfaceText: "Outpass Verrification", interfaceSubText: "Enter UID", messageText: "Backend error"});
+            res.render("interface2", { interfaceText: "Outpass Verrification", interfaceSubText: "Enter UID", messageText: "Backend error" });
         }
-        else if(result == null){
-            const generatedFinalPass = new finalPass({
-                name: req.body.nameData,
-                uidData: req.body.uidData,
-                mobileNo: req.body.mobileNo,
-                gurdianNo: req.body.gurdianNo,
-                purpose: req.body.purposeData,
-                place: req.body.placeData,
-                time: req.body.timeData,
-                date: req.body.dateData,
-                hostelDetails: {
-                    hostelName: req.body.hostelName,
-                    roomNo: req.body.roomNo
-                },
-                warden: req.body.wardenData
-            });
-        
+        else if (result == null) {
             if (req.body.button == "success") {
+                const generatedFinalPass = new acceptedPass({
+                    name: req.body.nameData,
+                    uidData: req.body.uidData,
+                    mobileNo: req.body.mobileNo,
+                    gurdianNo: req.body.gurdianNo,
+                    purpose: req.body.purposeData,
+                    place: req.body.placeData,
+                    outTime: req.body.outTimeData,
+                    inTime: req.body.inTimeData,
+                    outDate: req.body.outDateData,
+                    inDate: req.body.inDateData,
+                    hostelDetails: {
+                        hostelName: req.body.hostelName,
+                        roomNo: req.body.roomNo
+                    },
+                    warden: req.body.wardenData
+                });
                 generatedFinalPass.save();
-                res.render("interface2", { interfaceText: "Outpass Verrification", interfaceSubText: "Enter UID", messageText: "Verrified"});
-                
+                res.render("interface2", { interfaceText: "Outpass Verrification", interfaceSubText: "Enter UID", messageText: "Verrified" });
+
             }
             else if (req.body.button == "failure") {
-                res.render("interface2", { interfaceText: "Outpass Verrification", interfaceSubText: "Enter UID", messageText: "Rejected"});
+                const generatedFinalPass = new rejectedPass({
+                    name: req.body.nameData,
+                    uidData: req.body.uidData,
+                    mobileNo: req.body.mobileNo,
+                    gurdianNo: req.body.gurdianNo,
+                    purpose: req.body.purposeData,
+                    place: req.body.placeData,
+                    outTime: req.body.outTimeData,
+                    inTime: req.body.inTimeData,
+                    outDate: req.body.outDateData,
+                    inDate: req.body.inDateData,
+                    hostelDetails: {
+                        hostelName: req.body.hostelName,
+                        roomNo: req.body.roomNo
+                    },
+                    warden: req.body.wardenData
+                });
+                generatedFinalPass.save();
+                res.render("interface2", { interfaceText: "Outpass Verrification", interfaceSubText: "Enter UID", messageText: "Rejected" });
             }
         }
-        else{
-            res.render("interface2", { interfaceText: "Outpass Verrification", interfaceSubText: "Enter UID", messageText: "Already Verrified"});
+        else {
+            res.render("interface2", { interfaceText: "Outpass Verrification", interfaceSubText: "Enter UID", messageText: "Already Verrified" });
         }
     })
-    
+
 })
 
 // message page for quick messages
@@ -275,6 +300,19 @@ app.post("/message", function (req, res) {
     res.redirect(link);
 });
 
+app.get("/test", (req, res) =>{
+    const allGeneratedPass = [];
+    guardData.find({}, (err, details)=>{    
+        res.render("outpassList", {list: details});
+    })  
+});
+
+app.post("/test", (req, res) =>{
+    const uidDataForSearch = req.body.uidByButton;
+    guardData.findOne({ uidData: uidDataForSearch.toUpperCase() }, function (err, result) {
+        res.render("finalDetails", { studentName: result.name, uidData: result.uidData, mobileNo: result.mobileNo, gurdianNo: result.gurdianNo, purposeData: result.purpose, placeData: result.place, outDateData: result.outDate, outTimeData: result.outTime, inTimeData: result.inTime, inDateData: result.inDate, hostelName: result.hostelDetails.hostelName + " [" + result.warden + "]", roomNo: result.hostelDetails.roomNo, wardenData: result.warden });
+    });
+})
 
 // listen part for the server
 app.listen(port, function (req, res) {
