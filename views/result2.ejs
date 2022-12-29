@@ -1,5 +1,9 @@
 <%- include('partials/header') %>
 
+<body>
+    <div>
+        <img class="logo" src="images/logo.png" alt="logo">
+    </div>
     <div class="container-fluid main">
         <div class="container-fluid contents">
 
@@ -67,15 +71,15 @@
                                 <div class="mb-3">
                                     <label class="form-label">Out Time</label>
                                     <h2>
-                                        <%= outTimeData %>
+                                        <%= timeData %>
                                     </h2>
                                 </div>
                             </td>
                             <td style="width: 400px;">
                                 <div class="mb-3">
-                                    <label class="form-label">Out Date</label>
+                                    <label class="form-label">Date</label>
                                     <h2>
-                                        <%= outDateData %>
+                                        <%= dateData %>
                                     </h2>
                                 </div>
                             </td>
@@ -112,10 +116,8 @@
                     <input type="hidden" name="wardenData" value=<%= wardenData %> />
                     <input type="hidden" name="purposeData" value=<%=purposeData %>/>
                     <input type="hidden" name="placeData" value=<%=placeData %>/>
-                    <input type="hidden" name="outTimeData" value=<%=outTimeData %>/>
-                    <input type="hidden" name="inTimeData" value=<%=inTimeData %>/>
-                    <input type="hidden" name="outDateData" value=<%=outDateData %>/>
-                    <input type="hidden" name="inDateData" value=<%=inDateData %>/>
+                    <input type="hidden" name="timeData" value=<%=timeData %>/>
+                    <input type="hidden" name="dateData" value=<%=dateData %>/>
 
                     <button class="btn btn-success" style="background-color: green;" id="result-last-button"
                         type="submit" name="button" value="success">Verrify</button>

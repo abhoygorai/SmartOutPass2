@@ -1,12 +1,13 @@
 <%- include('partials/header') %>
 
-    <div class="bg-white h-96 mt-20 flex flex-col 
-    items-center justify-center">
-        <h1 class="font-bold text-4xl mb-14 opacity-80">Outpass Creation System</h1>
-            <form action="/" method="post" class="m-0">
-                <div class="m-0">
-                    <button class="bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-6 m-3 rounded text-3xl" name="buttonData" value="hostel" type="submit">Hostel</button>
-                    <button class="bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-6 m-3 rounded text-3xl" name="buttonData" value="guard" type="submit">Guard</button>
+    <div class="container-fluid main">
+        <div class="container-fluid contents">
+
+            <h1 class="titleText">Smart Out Pass Creation</h1>
+            <form action="/" method="post">
+                <div class="buttonClass">
+                    <button class="btn btn-danger" name="buttonData" value="hostel" type="submit">Hostel</button>
+                    <button class="btn btn-danger" name="buttonData" value="guard" type="submit">Guard</button>
                 </div>
             </form>
     </div>

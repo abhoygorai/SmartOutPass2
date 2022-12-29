@@ -1,14 +1,18 @@
 <%- include('partials/header') %>
-
+<body>
+    <div>
+        <img class="logo" src="images/logo.png" alt="logo">
+    </div>
     <div class="container-fluid main">
         <div class="container-fluid contents">
+
 
             <h1 class="titleText"><%= interfaceText %></h1>
             <h5 style="opacity: 80%;"><%= interfaceSubText %></h5>
 
             <form class="form-1" method="post" action="/guard">
                 <div class="mb-3">
-                    <input required type="text" class="form-control" placeholder="Enter UID" name="uidData">
+                    <input type="text" class="form-control" placeholder="Enter UID" name="uidData">
                 </div>
                 <button type="submit" class="btn btn-danger" id="auth-submit-button">Submit</button>
             </form>

@@ -1,10 +1,12 @@
 <%- include('partials/header') %>
 
-    <div class="bg-white h-96 mt-20 flex flex-col 
-    items-center justify-center">
-        <h1 class="font-bold text-3xl opacity-80 mb-6">
-            <%= authPageTitle %>
-        </h1>
+    <div class="container-fluid main">
+        <div class="container-fluid contents">
+
+
+            <h1 class="titleText">
+                <%= authPageTitle %>
+            </h1>
 
         <form class="flex flex-col" method="post" action="/hostelauth">
             <div class="flex flex-col">
