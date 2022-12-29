@@ -1,32 +1,31 @@
 <%- include('partials/header') %>
 
-    <div class="container-fluid main">
-        <div class="container-fluid contents">
+    <div class="bg-white h-96 mt-20 flex flex-col 
+    items-center justify-center">
+        <h1 class="font-bold text-3xl opacity-80 mb-6">
+            <%= authPageTitle %>
+        </h1>
 
+        <form class="flex flex-col" method="post" action="/hostelauth">
+            <div class="flex flex-col">
+                <label class="text-lg justify-self-start">Username</label>
+                <input type="text" name="username" class="border-2 rounded" required value=<%=filledUsername %>>
+            </div>
+            <div class="flex flex-col">
+                <label class="text-lg justify-self-start">Password</label>
+                <input type="password" name="password" class="border-2 rounded" required>
+            </div>
+            <button type="submit" class="btn btn-danger" id="auth-submit-button">Login</button>
+        </form>
 
-            <h1 class="titleText">
-                <%= authPageTitle %>
-            </h1>
+        <% if(messageText !="" ){ %>
+            <div class="alert alert-danger" role="alert">
+                <%= messageText %>
+            </div>
+        <% } %>  
 
-            <form class="form-1" method="post" action="/hostelauth">
-                <div class="mb-3">
-                    <label class="form-label">Username</label>
-                    <input type="text" name="username" class="form-control" required value=<%=filledUsername %>>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Password</label>
-                    <input type="password" name="password" class="form-control" required>
-                </div>
-                <button type="submit" class="btn btn-danger" id="auth-submit-button">Login</button>
-            </form>
-
-            <% if(messageText !="" ){ %>
-                <div class="alert alert-danger" role="alert">
-                    <%= messageText %>
-                </div>
-            <% } %>
-
-        </div>
+        
+        
     </div>
 
 </body>

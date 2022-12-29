@@ -76,6 +76,7 @@ app.set("view engine", "ejs");
 
 // get request at the root
 app.get("/", function (req, res) {
+    // res.render("firstPage");
     res.render("firstPage");
 });
 
