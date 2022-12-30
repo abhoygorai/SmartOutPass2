@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-mongoose.connect("mongodb://localhost:27017/outpassDB");
+mongoose.connect("mongodb://127.0.0.1:27017/outpassDB");
 const outpassSchema = new mongoose.Schema({
     name: String,
     uidData: String,
@@ -15,9 +15,9 @@ const outpassSchema = new mongoose.Schema({
 const hostelData = new mongoose.model("HostelData", outpassSchema);
 
 const student1 = new hostelData({
-    name: "Ayush buttan",
+    name: "aditya bobola",
     uidData: "21BCS8888",
-    mobileNo: "1234123422",
+    mobileNo: "6295439332",
     gurdianNo: "97322065400",
     hostelDetails:{
         hostelName: "NCT1",
@@ -25,20 +25,22 @@ const student1 = new hostelData({
     }
 });
 
-// student1.save();
+student1.save();
 
 const guardSchema = new mongoose.Schema({
     name: String,
     uidData: String,
     mobileNo: String,
     gurdianNo: String,
-    hostelDetails:{
+    hostelDetails: {
         hostelName: String,
         roomNo: Number
     },
+    purpose: String,
     place: String,
+    inTime: String,
+    outTime: String,
     date: String,
-    time: String,
     warden: String
 })
 
@@ -55,8 +57,8 @@ const student11 = new guardData({
     },
     place: "Home",
     date: "2022-05-07",
-    time: "12-05"
+    inTime: "12-05"
 });
 
-student11.save();
+// student11.save();
 

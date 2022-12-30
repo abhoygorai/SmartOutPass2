@@ -1,9 +1,5 @@
 <%- include('partials/header') %>
 
-<body>
-    <div>
-        <img class="logo" src="images/logo.png" alt="logo">
-    </div>
     <div class="container-fluid main">
         <div class="container-fluid contents">
 
@@ -14,13 +10,14 @@
                         <td>
                             <div class="mb-3">
                                 <label class="form-label">Name</label>
-                                <input required type="text" class="form-control" name="nameData" value="<%= studentName %>">
+                                <input required type="text" class="form-control" name="nameData"
+                                    value="<%= studentName %>">
                             </div>
                         </td>
                         <td>
                             <div class="mb-3">
                                 <label class="form-label">UID</label>
-                                <input required type="text" class="form-control" name="uidData" value=<%= uidData %>>
+                                <input required type="text" class="form-control" name="uidData" value=<%=uidData %>>
                             </div>
                         </td>
                     </tr>
@@ -28,13 +25,13 @@
                         <td>
                             <div class="mb-3">
                                 <label class="form-label">Mobile No</label>
-                                <input required type="text" class="form-control" name="mobileNo" value=<%= mobileNo %>>
+                                <input required type="text" class="form-control" name="mobileNo" value=<%=mobileNo %>>
                             </div>
                         </td>
                         <td>
                             <div class="mb-3">
                                 <label class="form-label">Guiardian's No</label>
-                                <input required type="text" class="form-control" name="gurdianNo" value=<%= gurdianNo %>>
+                                <input required type="text" class="form-control" name="gurdianNo" value=<%=gurdianNo %>>
                             </div>
                         </td>
                     </tr>
@@ -42,27 +39,28 @@
                         <td>
                             <div class="mb-3">
                                 <label class="form-label">Hostel Name</label>
-                                <input required type="text" class="form-control" name="hostelName" value="NCT-1">
+                                <input required type="text" class="form-control" name="hostelName" value=<%=hostelName
+                                    %>>
                             </div>
                         </td>
                         <td>
                             <div class="mb-3">
-                                <label class="form-label">Room No</label>
-                                <input required type="text" class="form-control" name="roomNo" value="815">
+                                <label class="form-label">Hostel Name</label>
+                                <input required type="text" class="form-control" name="roomNo" value=<%=roomNo %>>
                             </div>
                         </td>
                     </tr>
                     <tr>
                         <td>
                             <div class="mb-3">
-                                <label class="form-label">Purpose</label>
-                                <input required type="text" class="form-control" name="purposeData">
+                                <label class="form-label">Place</label>
+                                <input required type="text" class="form-control" name="placeData">
                             </div>
                         </td>
                         <td>
                             <div class="mb-3">
-                                <label class="form-label">Place</label>
-                                <input required type="text" class="form-control" name="placeData">
+                                <label class="form-label">Purpose</label>
+                                <input required type="text" class="form-control" name="purposeData">
                             </div>
                         </td>
                     </tr>
@@ -70,13 +68,28 @@
                         <td>
                             <div class="mb-3">
                                 <label class="form-label">Out Time</label>
-                                <input required type="time" class="form-control" name="timeData">
+                                <input required type="time" class="form-control" name="outTimeData">
                             </div>
                         </td>
                         <td>
                             <div class="mb-3">
-                                <label class="form-label">Date</label>
-                                <input required type="date" class="form-control" name="dateData">
+                                <label class="form-label">Out Date</label>
+                                <input required type="date" class="form-control" name="outDateData">
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="mb-3">
+                                <label class="form-label">In Time</label>
+                                <input required type="time" class="form-control" name="inTimeData">
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="mb-3">
+                                <label class="form-label">In Date</label>
+                                <input required type="date" class="form-control" name="inDateData">
                                 <input hidden type="text" class="form-control" name="wardenData" value="wardenData">
                             </div>
                         </td>
@@ -88,6 +101,6 @@
         </div>
     </div>
 
-</body>
+    </body>
 
-</html>
+    </html>
