@@ -25,7 +25,7 @@ const student1 = new hostelData({
     }
 });
 
-student1.save();
+// student1.save();
 
 const guardSchema = new mongoose.Schema({
     name: String,

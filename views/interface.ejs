@@ -4,23 +4,23 @@
         <div class="container-fluid contents">
 
 
-            <h1 class="titleText"><%= interfaceText %></h1>
-            <h5 style="opacity: 80%;"><%= interfaceSubText %></h5>
+            <h1 class="titleText">Outpass Generation</h1>
+            <h5 style="opacity: 80%;">Enter UID</h5>
 
-            <form class="form-1" method="post" action="/hostel">
+            <form class="form-1" method="post" action="/hostel/interface">
                 <div class="mb-3">
                     <input required type="text" class="form-control" placeholder="Enter UID" name="uidData">
                 </div>
                 <button type="submit" class="btn btn-danger" id="auth-submit-button">Submit</button>
             </form>
 
-            <% if(messageText !="" ){ %>
-                <div class="alert alert-success" role="alert">
+            <% if(messageText !="" && messageText != undefined){ %>
+                <div class="alert alert-danger" role="alert">
                     <%= messageText %>
                 </div>
             <% } %>
 
-            <form action="/hostel/features" method="post">
+            <form action="/features" method="post">
                 <button class="btn btn-secondary nonImp" name="button" value="genpass">Veiw Generated Pass</button>
                 <button class="btn btn-secondary nonImp" name="button" value="verpass">Veiw Verified Pass</button>
                 <button class="btn btn-secondary nonImp" name="button" value="logout">logout</button>

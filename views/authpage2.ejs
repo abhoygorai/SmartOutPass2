@@ -5,10 +5,10 @@
 
 
             <h1 class="titleText">
-                <%= authPageTitle %>
+                Guard login
             </h1>
 
-            <form class="form-1" method="post" action="/guardauth">
+            <form class="form-1" method="post" action="/guard/login">
                 <div class="mb-3">
                     <label class="form-label">Username</label>
                     <input type="text" name="username" class="form-control" required value=<%=filledUsername %>>
@@ -20,7 +20,7 @@
                 <button type="submit" class="btn btn-danger" id="auth-submit-button">Login</button>
             </form>
 
-            <% if(messageText !="" ){ %>
+            <% if(messageText !="" && messageText != undefined){ %>
                 <div class="alert alert-danger" role="alert">
                     <%= messageText %>
                 </div>
