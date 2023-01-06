@@ -23,33 +23,123 @@ app.set("view engine", "ejs");
 app.use(express.json());
 app.use(cookieParser())
 
+// this is a middleware for authenticationf
+hauth = (req, res, next) => {
+    let cookieData = ""
+    try {
+        cookieData = req.cookies.wardenck;
+        // console.log(cookieData)
+        if (cookieData != undefined) {
+            verrification = jwt.verify(cookieData, "outpasssystem");
+            // console.log(verrification);
+            models.hostelAuthenticationData.findOne({ username: verrification.username }, (err, result) => {
+                // console.log(result);
+                if (err) {
+                    console.log(err);
+                    res.redirect("/hostel/login");
+                }
+                else if (result === null) {
+                    res.redirect("/hostel/login");
+                }
+                else {
+                    next()
+                    return
+                }
+            });
+        }
+        else {
+            res.redirect("/hostel/login");
+        }
+    } catch (error) {
+        console.log(error);
+        res.redirect("/hostel/login");
+    }
+
+}
+gauth = (req, res, next) => {
+    let cookieData = ""
+    try {
+        cookieData = req.cookies.guardck;
+        // console.log(cookieData)
+        if (cookieData != undefined) {
+            verrification = jwt.verify(cookieData, "outpasssystem");
+            // console.log(verrification);
+            models.guardAuthenticationData.findOne({ username: verrification.username }, (err, result) => {
+                // console.log(result);
+                if (err) {
+                    console.log(err);
+                    res.redirect("/guard/login");
+                }
+                else if (result === null) {
+                    res.redirect("/guard/login");
+                }
+                else {
+                    next()
+                    return
+                }
+            });
+        }
+        else {
+            res.redirect("/guard/login");
+        }
+    } catch (error) {
+        console.log(error);
+        res.redirect("/guard/login");
+    }
+
+}
+checkLogIn = (req, res, next) => {
+    let cookieData = ""
+    try {
+        cookieData = req.cookies.wardenck;
+        // console.log(cookieData)
+        if (cookieData != undefined) {
+            verrification = jwt.verify(cookieData, "outpasssystem");
+            // console.log(verrification);
+            models.hostelAuthenticationData.findOne({ username: verrification.username }, (err, result) => {
+                // console.log(result);
+                if (err) {
+                    console.log(err);
+                    res.redirect("/hostel/login");
+                }
+                else if (result === null) {
+                    res.redirect("/hostel/login");
+                }
+                else {
+                    res.redirect("/hostel/interface")
+                }
+            });
+        }
+        else {
+            res.redirect("/hostel/login");
+        }
+    } catch (error) {
+        console.log(error);
+        res.redirect("/hostel/login");
+    }
+
+}
+
 // get request at the root
 app.get("/", function (req, res) {
     res.render("firstPage");
 });
 
-//this is a just a single comment I am making a snap and doing nothing
 // post request at the root
 app.post("/", function (req, res) {
-    if (req.body.buttonData == "hostel") res.redirect("/hostel/");
+    if (req.body.buttonData === "hostel") res.redirect("/hostel");
 
-    if (req.body.buttonData == "guard") res.redirect("/guard");
+    if (req.body.buttonData === "guard") res.redirect("/guard");
 });
 
 app.get("/hostel", (req, res) => {
-    cookieValue = req.cookies.wardenck;
-    if (cookieValue == undefined){
-        res.redirect("/hostel/login")
-    }
-    else{
-
-    }
+    res.redirect("/hostel/login")
 })
 
 // get request in hostel route for loading hostel authorization page
 
 app.get("/hostel/login", function (req, res) {
-    console.log(req.query.messageText);
+    // console.log(req.query.messageText);
     res.render("authpage", {
         authPageTitle: "Warden login",
         messageText: req.query.messageText,
@@ -62,7 +152,7 @@ app.post("/hostel/login", function (req, res) {
     models.hostelAuthenticationData.findOne({ username: req.body.username }, function (err, result) {
         if (err) {
             console.log(err);
-        } else if (result == null) {
+        } else if (result === null) {
             res.redirect(url.format({
                 pathname: "/hostel/login",
                 query: {
@@ -82,26 +172,24 @@ app.post("/hostel/login", function (req, res) {
                         }
                     }));
                 } else if (check) {
-                    
-                    const token = jwt.sign({ 
+
+                    const token = jwt.sign({
                         username: req.body.username,
+                        hash: result.hash,
+                        eid: result.eid,
                     }, "outpasssystem");
 
-                    const cookieValue = {
-                        username: req.body.username,
-                        name: result.name,
-                        eid: result.eid,
-                        token: token
-                    }
-                    
-                    res.cookie("wardenck", cookieValue, {
-                        maxAge: 1000 * 60 * 10,
+                    res.cookie("wardenck", token, {
+                        maxAge: 1000 * 60 * 5,
                         httpOnly: false
                     });
 
-                    res.render("interface", {
-                        messageText: ""
-                    });
+                    res.redirect(url.format({
+                        pathname: "/hostel/interface",
+                        query: {
+                            "messageText": ""
+                        }
+                    }));
                 } else {
                     res.redirect(url.format({
                         pathname: "/hostel/login",
@@ -117,6 +205,35 @@ app.post("/hostel/login", function (req, res) {
     );
 });
 
+app.get("/hostel/interface", hauth, (req, res) => {
+    let cookieData = req.cookies.wardenck;
+    verrification = jwt.verify(cookieData, "outpasssystem");
+    // console.log(verrification);
+    models.hostelAuthenticationData.findOne({ username: verrification.username }, (err, result) => {
+        if (err) {
+            console.log(err)
+            res.render("interface", {
+                messageText: ""
+            });
+        }
+        else {
+            const token = jwt.sign({
+                username: result.username,
+                hash: result.hash,
+                eid: result.eid,
+            }, "outpasssystem");
+
+            res.cookie("wardenck", token, {
+                maxAge: 1000 * 60 * 5,
+                httpOnly: false
+            });
+
+            res.render("interface", {
+                messageText: ""
+            });
+        }
+    })
+});
 
 // post request at the hostel for searching in existing database for displaying essential details.
 app.post("/hostel/interface", function (req, res) {
@@ -125,10 +242,13 @@ app.post("/hostel/interface", function (req, res) {
     models.hostelData.findOne({ uidData: dataCameFromPost.toUpperCase() }, function (err, result) {
         if (err) console.log(err);
         else {
-            if (result == null) {
-                res.render("interface", {
-                    messageText: "No data found"
-                });
+            if (result === null) {
+                res.redirect(url.format({
+                    pathname: "/hostel/interface",
+                    query: {
+                        "messageText": "No data found"
+                    }
+                }));
             } else {
                 res.render("hostelResult", {
                     studentName: result.name,
@@ -153,7 +273,7 @@ app.post("/hostelresult", function (req, res) {
     models.guardData.findOne({ uidData: uidDataForSearch.toUpperCase() }, function (err, result) {
         if (err) {
             console.log(err);
-        } else if (result == null) {
+        } else if (result === null) {
             const postDataForGuard = new models.guardData({
                 name: req.body.nameData,
                 uidData: uidDataForSearch,
@@ -173,13 +293,19 @@ app.post("/hostelresult", function (req, res) {
             });
             postDataForGuard.save();
             // console.log(postDataForGuard);
-            res.render("interface", {
-                messageText: "Outpass created"
-            });
+            res.redirect(url.format({
+                pathname: "/hostel/interface",
+                query: {
+                    "messageText": "Outpass Created"
+                }
+            }));
         } else {
-            res.render("interface", {
-                messageText: "Outpass already exist"
-            });
+            res.redirect(url.format({
+                pathname: "/hostel/interface",
+                query: {
+                    "messageText": "Outpass Already exist"
+                }
+            }));
         }
     }
     );
@@ -189,7 +315,7 @@ app.post("/hostelresult", function (req, res) {
 app.post("/features", (req, res) => {
     const buttonData = req.body.button;
     // console.log(buttonData);
-    if (buttonData == "genpass") {
+    if (buttonData === "genpass") {
         models.guardData.find({}, (err, details) => {
             if (err) {
                 console.log(err);
@@ -198,7 +324,7 @@ app.post("/features", (req, res) => {
                 });
             } else res.render("outpassList", { list: details });
         });
-    } else if (buttonData == "verpass") {
+    } else if (buttonData === "verpass") {
         models.acceptedPass.find({}, (err, details) => {
             if (err) {
                 console.log(err);
@@ -207,7 +333,7 @@ app.post("/features", (req, res) => {
                 });
             } else res.render("outpassList", { list: details });
         });
-    } else if (buttonData == "logout") {
+    } else if (buttonData === "logout") {
         res.redirect("/hostelauth");
     }
 });
@@ -269,7 +395,7 @@ app.get("/guard", (req, res) => {
 })
 
 //get request in guard authorization page for logging in the guard
-app.get("/guard/login", function (req, res) {
+app.get("/guard/login", (req, res) => {
     res.render("authpage2", {
         messageText: req.query.messageText,
         filledUsername: "",
@@ -287,7 +413,7 @@ app.post("/guard/login", function (req, res) {
                     "messageText": "Error Occured",
                 }
             }));
-        } else if (result == null) {
+        } else if (result === null) {
             res.redirect(url.format({
                 pathname: "/guard/login",
                 query: {
@@ -295,34 +421,81 @@ app.post("/guard/login", function (req, res) {
                 }
             }));
         } else {
-            bcrypt.compare(req.body.password, result.hashPassword,
-                function (err, check) {
-                    if (err) {
-                        console.log(err);
-                        res.redirect(url.format({
-                            pathname: "/guard/login",
-                            query: {
-                                "messageText": "Error Occured",
-                            }
-                        }));
-                    } else if (check) {
-                        res.render("interface2", {
-                            messageText: ""
-                        });
-                    } else {
-                        res.redirect(url.format({
-                            pathname: "/guard/login",
-                            query: {
-                                "messageText": "Wrong Password",
-                            }
-                        }));
-                    }
+            bcrypt.compare(req.body.password, result.hashPassword, function (err, check) {
+                if (err) {
+                    console.log(err);
+                    res.redirect(url.format({
+                        pathname: "/guard/login",
+                        query: {
+                            "messageText": "Error Occured",
+                        }
+                    }));
+                } else if (check) {
+
+                    const token = jwt.sign({
+                        username: req.body.username,
+                        hash: result.hash,
+                        eid: result.eid,
+                    }, "outpasssystem");
+
+                    res.cookie("guardck", token, {
+                        maxAge: 1000 * 60 * 5,
+                        httpOnly: false
+                    });
+
+                    res.redirect(url.format({
+                        pathname: "/guard/interface",
+                        query: {
+                            "messageText": ""
+                        }
+                    }));
+
+
+                } else {
+                    res.redirect(url.format({
+                        pathname: "/guard/login",
+                        query: {
+                            "messageText": "Wrong Password",
+                        }
+                    }));
                 }
+            }
             );
         }
     }
     );
 });
+
+app.get("/guard/interface", gauth, (req, res) => {
+
+    let cookieData = req.cookies.guardck;
+    verrification = jwt.verify(cookieData, "outpasssystem");
+    // console.log(verrification);
+    models.guardAuthenticationData.findOne({ username: verrification.username }, (err, result) => {
+        if (err) {
+            console.log(err)
+            res.render("interface2", {
+                messageText: ""
+            });
+        }
+        else {
+            const token = jwt.sign({
+                username: result.username,
+                hash: result.hash,
+                eid: result.eid,
+            }, "outpasssystem");
+
+            res.cookie("guardck", token, {
+                maxAge: 1000 * 60 * 5,
+                httpOnly: false
+            });
+
+            res.render("interface2", {
+                messageText: ""
+            });
+        }
+    })
+})
 
 // post request to search in the database to check if the pass is generated or not
 app.post("/guard/interface", function (req, res) {
@@ -330,13 +503,19 @@ app.post("/guard/interface", function (req, res) {
     models.guardData.findOne({ uidData: uidDataForSearch.toUpperCase() }, function (err, result) {
         if (err) {
             console.log(err);
-            res.render("interface2", {
-                messageText: "Backend error",
-            });
-        } else if (result == null) {
-            res.render("interface2", {
-                messageText: "No data found",
-            });
+            res.redirect(url.format({
+                pathname: "/guard/interface",
+                query: {
+                    "messageText": "Backend error"
+                }
+            }));
+        } else if (result === null) {
+            res.redirect(url.format({
+                pathname: "/guard/interface",
+                query: {
+                    "messageText": "No data found"
+                }
+            }));
         } else {
             res.render("result2", {
                 studentName: result.name,
@@ -364,11 +543,14 @@ app.post("/guardResult", function (req, res) {
     models.acceptedPass.findOne({ uidData: req.body.uidData.toUpperCase() }, function (err, result) {
         if (err) {
             console.log(err);
-            res.render("interface2", {
-                messageText: "Backend error",
-            });
-        } else if (result == null) {
-            if (req.body.button == "success") {
+            res.redirect(url.format({
+                pathname: "/guard/interface",
+                query: {
+                    "messageText": "Backend error"
+                }
+            }));
+        } else if (result === null) {
+            if (req.body.button === "success") {
                 const generatedFinalPass = new models.acceptedPass({
                     name: req.body.nameData,
                     uidData: req.body.uidData,
@@ -387,10 +569,13 @@ app.post("/guardResult", function (req, res) {
                     warden: req.body.wardenData,
                 });
                 generatedFinalPass.save();
-                res.render("interface2", {
-                    messageText: "Verrified",
-                });
-            } else if (req.body.button == "failure") {
+                res.redirect(url.format({
+                    pathname: "/guard/interface",
+                    query: {
+                        "messageText": "Verrified"
+                    }
+                }));
+            } else if (req.body.button === "failure") {
                 const generatedFinalPass = new models.rejectedPass({
                     name: req.body.nameData,
                     uidData: req.body.uidData,
@@ -409,14 +594,20 @@ app.post("/guardResult", function (req, res) {
                     warden: req.body.wardenData,
                 });
                 generatedFinalPass.save();
-                res.render("interface2", {
-                    messageText: "Rejected",
-                });
+                res.redirect(url.format({
+                    pathname: "/guard/interface",
+                    query: {
+                        "messageText": "Rejected"
+                    }
+                }));
             }
         } else {
-            res.render("interface2", {
-                messageText: "Already Verrified",
-            });
+            res.redirect(url.format({
+                pathname: "/guard/interface",
+                query: {
+                    "messageText": "Already Verrified"
+                }
+            }));
         }
     }
     );
